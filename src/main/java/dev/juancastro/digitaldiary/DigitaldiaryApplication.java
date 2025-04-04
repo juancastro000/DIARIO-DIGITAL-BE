@@ -7,8 +7,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class DigitaldiaryApplication {
 
 	public static void main(String[] args) {
+		
 		SpringApplication.run(DigitaldiaryApplication.class, args);
+
+    }
 		
 	}
 
-}
+
