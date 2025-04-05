@@ -13,6 +13,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
+import dev.juancastro.digitaldiary.security.JwtUtil;
+
 public class LoginControllerTest {
 
     @Test
@@ -20,10 +22,12 @@ public class LoginControllerTest {
         LoginRequest loginRequest = new LoginRequest("testuser", "dGVzdHBhc3N3b3Jk");
         AuthenticationManager authManager = mock(AuthenticationManager.class);
         Authentication authResult = new UsernamePasswordAuthenticationToken("testuser", "testpassword");
+        JwtUtil jwtUtil = mock(JwtUtil.class);
+
 
         when(authManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
             .thenReturn(authResult);
-        LoginController controller = new LoginController(authManager);
+        LoginController controller = new LoginController(authManager, jwtUtil);
         ResponseEntity<LoginResponse> responseEntity = controller.login(loginRequest);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -34,10 +38,11 @@ public class LoginControllerTest {
     public void testLoginFailure() {
         LoginRequest loginRequest = new LoginRequest("testuser", "dGVzdHBhc3N3b3Jk");
         AuthenticationManager authManager = mock(AuthenticationManager.class);
+        JwtUtil jwtUtil = mock(JwtUtil.class);
 
         when(authManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
             .thenThrow(new BadCredentialsException("Credenciales inválidas"));
-        LoginController controller = new LoginController(authManager);
+        LoginController controller = new LoginController(authManager, jwtUtil);
         ResponseEntity<LoginResponse> responseEntity = controller.login(loginRequest);
 
         assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
