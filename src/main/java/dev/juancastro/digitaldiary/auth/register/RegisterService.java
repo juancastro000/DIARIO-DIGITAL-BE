@@ -26,9 +26,6 @@ public class RegisterService {
         Decoder decoder = Base64.getDecoder();
         byte[] decodedBytes = decoder.decode(userData.password());
         String passwordDecoded = new String(decodedBytes);
-        System.out.println("Registro: Contraseña decodificada: " + passwordDecoded);
-
-        System.out.println("<------------ " + passwordDecoded);
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String passwordEncoded = encoder.encode(passwordDecoded);

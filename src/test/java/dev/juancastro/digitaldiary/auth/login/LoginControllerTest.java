@@ -4,7 +4,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Base64;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
