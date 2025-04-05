@@ -46,7 +46,7 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher(endpoint + "/public/**")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher(endpoint + "/auth/**")).permitAll()
-                        .requestMatchers(AntPathRequestMatcher.antMatcher(endpoint + "/user/**")).authenticated()
+                        .requestMatchers(AntPathRequestMatcher.antMatcher(endpoint + "/entry/**")).authenticated()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults());
 
