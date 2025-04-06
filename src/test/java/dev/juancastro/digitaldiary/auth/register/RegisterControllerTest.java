@@ -19,7 +19,7 @@ public class RegisterControllerTest {
     public void testRegisterSuccess() {
         RegisterService mockService = mock(RegisterService.class);
         RegisterController controller = new RegisterController(mockService);
-        UserDto userDto = new UserDto("testuser", "dGVzdHBhc3N3b3Jk");
+        UserDto userDto = new UserDto("testuser", "dGVzdHBhc3N3b3Jk", "test@example.com");
 
 
         Map<String, String> mockResponse = Map.of("message", "Success");
