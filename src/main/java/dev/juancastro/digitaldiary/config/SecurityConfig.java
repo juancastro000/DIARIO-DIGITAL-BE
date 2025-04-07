@@ -13,10 +13,13 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 
 import dev.juancastro.digitaldiary.security.JpaUserDetailsService;
+import dev.juancastro.digitaldiary.security.JwtAuthenticationFilter;
+import dev.juancastro.digitaldiary.security.JwtUtil;
 
 @Configuration
 @EnableWebSecurity
@@ -26,9 +29,11 @@ public class SecurityConfig {
     private String endpoint;
 
     private final JpaUserDetailsService userDetailsService;
+    private final JwtUtil jwtUtil;
 
-    public SecurityConfig(JpaUserDetailsService userDetailsService) {
+    public SecurityConfig(JpaUserDetailsService userDetailsService, JwtUtil jwtUtil) {
         this.userDetailsService = userDetailsService;
+        this.jwtUtil = jwtUtil;
     }
 
     @Bean
@@ -48,11 +53,8 @@ public class SecurityConfig {
                         .requestMatchers(AntPathRequestMatcher.antMatcher(endpoint + "/auth/**")).permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher(endpoint + "/entry/**")).authenticated()
                         .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults());
-
-        http.headers(headers -> headers
-        .contentSecurityPolicy(csp -> csp.policyDirectives("frame-ancestors 'self'"))
-        );
+                        .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, userDetailsService),
+                        UsernamePasswordAuthenticationFilter.class); 
         return http.build();
     }
 

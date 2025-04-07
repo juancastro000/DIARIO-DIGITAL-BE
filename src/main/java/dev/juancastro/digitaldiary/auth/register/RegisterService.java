@@ -1,11 +1,8 @@
 package dev.juancastro.digitaldiary.auth.register;
 
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Base64.Decoder;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

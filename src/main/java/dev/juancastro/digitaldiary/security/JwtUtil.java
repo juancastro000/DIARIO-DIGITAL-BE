@@ -1,5 +1,6 @@
 package dev.juancastro.digitaldiary.security;
 
+import java.text.ParseException;
 import java.util.Date;
 
 import com.nimbusds.jose.JOSEException;
@@ -7,6 +8,7 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
@@ -36,5 +38,37 @@ public class JwtUtil {
         signedJWT.sign(signer);
 
         return signedJWT.serialize();
+    }
+
+    public String getUsernameFromToken(String token) throws ParseException, JOSEException {
+        SignedJWT signedJWT = SignedJWT.parse(token);
+        JWTClaimsSet claims = signedJWT.getJWTClaimsSet();
+        return claims.getSubject();
+    }
+
+    public boolean validateToken(String token, org.springframework.security.core.userdetails.UserDetails userDetails) {
+        try {
+            SignedJWT signedJWT = SignedJWT.parse(token);
+            
+            // Verificar firma
+            MACVerifier verifier = new MACVerifier(secret.getBytes());
+            if (!signedJWT.verify(verifier)) {
+                return false;
+            }
+            
+            // Verificar expiración
+            JWTClaimsSet claims = signedJWT.getJWTClaimsSet();
+            Date expirationTime = claims.getExpirationTime();
+            if (expirationTime.before(new Date())) {
+                return false;
+            }
+            
+            // Verificar que el subject concuerde con el username
+            String username = claims.getSubject();
+            return username.equals(userDetails.getUsername());
+        } catch (ParseException | JOSEException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
