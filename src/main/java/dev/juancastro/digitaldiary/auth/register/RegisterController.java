@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import dev.juancastro.digitaldiary.users.UserDto;
 
 @RestController
-@RequestMapping(path="${api-endpoint}/auth/register")
+@RequestMapping(path="${api-endpoint}/auth")
 public class RegisterController {
 
     private final RegisterService service;
@@ -21,7 +21,7 @@ public class RegisterController {
         this.service = service;
     }
 
-    @PostMapping("")
+    @PostMapping("/register")
     public ResponseEntity<Map<String,String>> register(@RequestBody UserDto newUser) {
 
         Map<String, String> response = service.save(newUser);

@@ -50,20 +50,17 @@ public class JwtUtil {
         try {
             SignedJWT signedJWT = SignedJWT.parse(token);
             
-            // Verificar firma
             MACVerifier verifier = new MACVerifier(secret.getBytes());
             if (!signedJWT.verify(verifier)) {
                 return false;
             }
             
-            // Verificar expiración
             JWTClaimsSet claims = signedJWT.getJWTClaimsSet();
             Date expirationTime = claims.getExpirationTime();
             if (expirationTime.before(new Date())) {
                 return false;
             }
             
-            // Verificar que el subject concuerde con el username
             String username = claims.getSubject();
             return username.equals(userDetails.getUsername());
         } catch (ParseException | JOSEException e) {
