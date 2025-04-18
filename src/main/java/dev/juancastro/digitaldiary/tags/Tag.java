@@ -22,6 +22,9 @@ public class Tag {
     }
 
 
+    public Tag(long l, TagType personal) {
+    }
+
     public Long getId() {
         return id;
     }
