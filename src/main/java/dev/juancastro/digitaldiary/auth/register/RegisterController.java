@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.juancastro.digitaldiary.users.UserDto;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(path="${api-endpoint}/auth")
@@ -22,10 +23,12 @@ public class RegisterController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String,String>> register(@RequestBody UserDto newUser) {
+    public ResponseEntity<Map<String,String>> registerUser(@Valid @RequestBody UserDto userDto) {
 
-        Map<String, String> response = service.save(newUser);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        service.save(userDto);
+        
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(Map.of("message", "Usuario creado con éxito"));
     }
 }

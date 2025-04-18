@@ -16,8 +16,12 @@ public class User {
     @Column(name = "id_user")
     private Long id;
 
+    @Column(name = "user_name", unique = true)
     private String username;
+
     private String password;
+
+    @Column(name = "user_email", unique = true)
     private String email;
 
     public User (){

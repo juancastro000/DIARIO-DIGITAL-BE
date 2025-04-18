@@ -2,8 +2,11 @@ package dev.juancastro.digitaldiary.auth.register;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 
 import java.util.Map;
 
@@ -17,19 +20,21 @@ public class RegisterControllerTest {
 
     @Test
     public void testRegisterSuccess() {
+
         RegisterService mockService = mock(RegisterService.class);
         RegisterController controller = new RegisterController(mockService);
-        UserDto userDto = new UserDto("testuser", "dGVzdHBhc3N3b3Jk", "test@example.com");
+        UserDto userDto = new UserDto("testuser", "test@example.com", "dGVzdHBhc3N3b3Jk");
 
+        doNothing().when(mockService).save(userDto);
 
-        Map<String, String> mockResponse = Map.of("message", "Success");
-        when(mockService.save(userDto)).thenReturn(mockResponse);
-        ResponseEntity<Map<String, String>> response = controller.register(userDto);
-
+        ResponseEntity<Map<String, String>> response = controller.registerUser(userDto);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals("Success", response.getBody().get("message"));
+        assertEquals("Usuario creado con éxito", response.getBody().get("message"));
+
+ 
+        verify(mockService, times(1)).save(userDto);
     }
 
 }
