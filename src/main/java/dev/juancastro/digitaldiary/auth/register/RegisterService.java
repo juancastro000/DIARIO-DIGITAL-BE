@@ -26,7 +26,6 @@ public class RegisterService {
 
     @Transactional
     public void save(UserDto userData) {
-        // Comprueba unicidad
         if (userRepository.existsByUsername(userData.username())) {
             throw new DuplicateUserException("El nombre de usuario '" + userData.username() + "' ya está en uso");
         }
@@ -38,7 +37,6 @@ public class RegisterService {
             User newUser = UserMapper.toEntity(userData, passwordEncoder);
             userRepository.save(newUser);
         } catch (DataIntegrityViolationException e) {
-            // Captura violaciones de constraints de BD
             String msg = e.getMostSpecificCause().getMessage().toLowerCase();
             if (msg.contains("username")) {
                 throw new DuplicateUserException("El nombre de usuario ya existe", e);
